@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './App.css';
 
 class App extends Component {
 
@@ -12,10 +13,12 @@ class App extends Component {
 
   render() {
     return(
-      <div>
+      <div className="container">
         <h1>StackOverflow Search</h1>
-        <input onChange={e => this.setState({text: e.target.value.toLowerCase()})} />
-        <button onClick={this.onSearch}>Search</button>
+        <div className="container2">
+          <input className="field" onChange={e => this.setState({text: e.target.value.toLowerCase()})} />
+          <a href="#" className="search" onClick={this.onSearch} >SEARCH</a>
+        </div>
       </div>
     );
   }
