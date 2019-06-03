@@ -9,6 +9,7 @@
 }
 
 h1 {
+  color: #ffc107;
   font-size: 65px;
   font-family: 'Roboto', sans-serif;
 }
@@ -22,11 +23,11 @@ h1 {
 }
 
 .search {
-	background-color:#44c767;
+	background-color:#ffd740;
 	border-radius: 0px 5px 5px 0px;
 	display:inline-block;
 	cursor:pointer;
-	color:#ffffff;
+	color: #000000;
 	font-family: 'Roboto', sans-serif;
 	font-size:30px;
 	padding:10px 30px;
@@ -35,14 +36,14 @@ h1 {
 }
 
 .search:hover {
-  background-color:#ffffff;
-  color: black;
+  background-color:black;
+  color: white;
 }
 
 
 .field {
   border-radius: 5px 0px 0px 5px;
-  border: none;
+  border: 1px solid white;
   padding: 10px;
   font-size: 30px;
   outline-color: #ffffff;
