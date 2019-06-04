@@ -74,7 +74,7 @@ class App extends Component {
     else if (this.state.screen === 'results') {
       return(
         <div className="container3">
-          <h1>Top 5 results:</h1>
+          <h1>Top results:</h1>
           <div>
             {
               this.state.results.map((item, index) => {

@@ -66,6 +66,11 @@ def get_similarity(messages):
 
     # returning the top 5 results
     top = []
-    for i in range(0,5):
+    if len(sortedSearch) < 5:
+      for i in range(0,len(sortedSearch)):
         top.append(sortedSearch[i].get("title"))
+    else: 
+      for i in range(0,5):
+          top.append(sortedSearch[i].get("title"))
+    
     return top
