@@ -11,9 +11,8 @@ def hello():
     tags = core.get_tags(input)
     messages = core.get_questions(tags)
     messages.append(input)
-    similar = "waiting"
     similar = core.get_similarity(messages)
-    return jsonify({'results': similar})
+    return jsonify(similar)
 
 
 if __name__ == '__main__':

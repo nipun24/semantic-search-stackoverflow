@@ -3,6 +3,7 @@ import tensorflow_hub as hub
 import numpy as np
 import nltk
 import requests
+from itertools import combinations
 
 #Cleaning the input to get tags
 def get_tags(input):
@@ -21,12 +22,24 @@ def get_tags(input):
 
 #Requesting the StackExchange API for questions using the tags obatained
 def get_questions(tags):
-    URL = 'https://api.stackexchange.com/2.2/questions?order=asc&sort=activity&tagged=python%3Bfunction%3Bdefinition&site=stackoverflow'
-    r = requests.get(url = URL)
-    data = r.json()
-    messages = []
-    for item in data['items']:
-        messages.append(item['title'])
+    temp = []
+    for i in range(1, len(tags)+1):
+        comb = []
+        comb.append(list(combinations(tags, i)))
+        for j in range(0, len(comb[0])):
+            temp.append(list(comb[0][j]))
+    for i in range(len(temp)-1, -1, -1):
+        url = ''
+        for j in temp[i]:
+            url += j + '%3B'
+        URL = f'https://api.stackexchange.com/2.2/questions?order=asc&sort=activity&tagged={url}&site=stackoverflow'
+        r = requests.get(url = URL)
+        data = r.json()
+        messages = []
+        for item in data['items']:
+            messages.append(item['title'])
+        if len(messages) != 0:
+            break
     return messages
 
 #Converting sentences to embeddings and computing the inner product to calculate similarity
