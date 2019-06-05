@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import './App.css';
 import URL from './constants';
-import loading from './loading.gif';
-import search from './search.png';
+import loading from './assets/loading.gif';
+import search from './assets/search.png';
+import link from './assets/link.png';
+import info from './assets/info.png';
 
 class App extends Component {
 
@@ -13,17 +15,44 @@ class App extends Component {
   }
 
   onSearch = () => {
-    this.setState({screen: 'loading'})
-    fetch(`${URL}/`, {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        query: this.state.text
-      })
-    })
+    this.setState({screen: 'loading'})    
+    // fetch(`${URL}/`, {
+    //   method: 'post',
+    //   headers: {'Content-Type': 'application/json'},
+    //   body: JSON.stringify({
+    //     query: this.state.text
+    //   })
+    // })
+    // .then(res => res.json())
+    // .then(json => {
+    //   if(json){
+    //     json[0].map((item, index) => {
+    //       json[1][index].probability = item.probability
+    //     })
+    //     json[1].sort((a ,b) => {
+    //       return b.probability - a.probability
+    //     })
+    //     this.setState({screen: 'results', results: json[1]})
+    //   }
+    //   else {
+    //     this.setState({screen: 'results'})
+    //   }
+    // })
+    fetch("https://raw.githubusercontent.com/nipun24/json-repo/master/result.json")
     .then(res => res.json())
     .then(json => {
-      this.setState({screen: 'results', results: json})
+      if(json){
+        json[0].map((item, index) => {
+          json[1][index].probability = item.probability
+        })
+        json[1].sort((a ,b) => {
+          return b.probability - a.probability
+        })
+        this.setState({screen: 'results', results: json[1]})
+      }
+      else {
+        this.setState({screen: 'results'})
+      }
     })
   }
 
@@ -64,7 +93,7 @@ class App extends Component {
             404
           </h1>
           <h2>Oops! No results were found for "{this.state.text}"</h2>
-          <a href="#" className="link" onClick={this.goBack}>GO TO SEARCH</a>
+          <a href="#" className="goto" onClick={this.goBack}>GO TO SEARCH</a>
         </div>
       );
     }
@@ -77,11 +106,21 @@ class App extends Component {
           <div>
             {
               this.state.results.map((item, index) => {
-                return <h3 className="items" key={index}>{item}</h3>
+                return(
+                  <div className="items">
+                    <h3 style={{margin: 0}} key={index}>
+                      {item.title}
+                    </h3>
+                    <div>
+                      <img className="link" src={link} onClick={()=> window.open(item.link, "_blank")}/>
+                      <img className="link" src={info} />
+                    </div>
+                  </div>
+                );
               })
             }
           </div>
-          <a href="#" className="link" onClick={this.goBack}>GO TO SEARCH</a>
+          <a href="#" className="goto" onClick={this.goBack}>GO TO SEARCH</a>
         </div>
       );
     }

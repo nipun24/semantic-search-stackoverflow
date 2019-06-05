@@ -18,12 +18,16 @@ def get_tags(input):
     for w in tokenized_word:
         if w not in stop_words:
             filtered_sent.append(w)
-    return filtered_sent
+    if len(filtered_sent) > 5:
+      return filtered_sent[:5]
+    else:
+      return filtered_sent
 
 #Requesting the StackExchange API for questions using the tags obatained
 def get_questions(tags):
     temp = []
     messages = []
+    data = []
     for i in range(1, len(tags)+1):
         comb = []
         comb.append(list(combinations(tags, i)))
@@ -41,7 +45,7 @@ def get_questions(tags):
             messages.append(item['title'])
         if len(messages) != 0:
             break
-    return messages
+    return [messages,data]
 
 #Converting sentences to embeddings and computing the inner product to calculate similarity
 def get_similarity(messages):
@@ -56,22 +60,10 @@ def get_similarity(messages):
         message_embeddings = session.run(similarity_message_encodings, feed_dict={similarity_input_placeholder: messages})
         per = np.inner(message_embeddings, message_embeddings[-1:])
 
-    # Sorting the results according to similarity"""
+    # Adding probability values to the questions
     dictItems = []
     i = 0
     for i in range(0, len(per)-1 ):
         temp = { "probability" : per.item(i), "title" : messages[i] }
         dictItems.append(temp)
-
-    sortedSearch = sorted(dictItems, key = lambda i: i['probability'], reverse = True)
-
-    # returning the top 5 results
-    top = []
-    if len(sortedSearch) < 5:
-      for i in range(0,len(sortedSearch)):
-        top.append(sortedSearch[i].get("title"))
-    else: 
-      for i in range(0,5):
-          top.append(sortedSearch[i].get("title"))
-    
-    return top
+    return dictItems

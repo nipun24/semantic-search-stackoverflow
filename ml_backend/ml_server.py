@@ -10,16 +10,15 @@ def hello():
     similar = []
     input = request.json['query']
     tags = core.get_tags(input)
-    messages = core.get_questions(tags)
+    x = core.get_questions(tags)
+    messages = x[0]
+    data = x[1]
     if len(messages) == 0:
-        return jsonify(similar)
+        return jsonify(False)
     else:
         messages.append(input)
         similar = core.get_similarity(messages)
-        return jsonify(similar)
+        return jsonify(similar, data['items'])
     
-    
-
-
 if __name__ == '__main__':
     app.run(debug=True)
