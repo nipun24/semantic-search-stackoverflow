@@ -4,69 +4,74 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: rgb(61,52,209);
-  background: linear-gradient(180deg, rgba(61,52,209,1) 16%, rgba(0,212,255,1) 95%);
-}
-
-h1 {
-  color: #ffc107;
-  font-size: 65px;
-  font-family: 'Roboto', sans-serif;
 }
 
 .container2 {
   display: flex;
-  width: 80vw;
-  flex-direction: row;
-  justify-content: center;
+  position:relative;
+  height: 70px;
+  width: 700px;
+}
+
+.field {
+  font-size: 18px;
+  padding-left: 40px; 
+  outline: none;
+  border: none;
+  height: 100%;
+  width: 100%;
+  border-radius: 70px;
+  color: #ffffff;
+  background: #54DEF9;
+  background: linear-gradient(to right, #12c2e9,#c471ed, #f64f59);
+}
+
+.field::placeholder {
+  color: #ffffff;
+}
+
+.icon {
+  position:absolute;
+  margin-right: 35px;
+  bottom:15px;
+  right:0px;
+  cursor: pointer;
+}
+
+.error { 
+  font-size: 100px;
+  margin: 0;
+  font-weight: 100;
+  background: -webkit-linear-gradient(#12c2e9,#c471ed, #f64f59);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: 'Roboto', sans-serif;
+}
+
+.link {
+  display: flex;
   align-items: center;
 }
 
 .container3 {
   display: flex;
-  height: 100vh;
   flex-direction: column;
   align-items: center;
-  background: rgb(61,52,209);
-  background: linear-gradient(180deg, rgba(61,52,209,1) 16%, rgba(0,212,255,1) 95%);
 }
 
-.search {
-	background-color:#ffd740;
-	border-radius: 0px 5px 5px 0px;
-	display:inline-block;
-	cursor:pointer;
-	color: #000000;
-	font-family: 'Roboto', sans-serif;
-	font-size:30px;
-	padding:10px 30px;
-  text-decoration:none;
-  outline: none;
-}
-
-.search:hover {
-  background-color:black;
-  color: white;
-}
-
-
-.field {
-  border-radius: 5px 0px 0px 5px;
-  border: 1px solid white;
-  padding: 10px;
-  font-size: 30px;
-  outline-color: #ffffff;
-}
-
-.field:focus {
-  outline: none;
+.resultHeading {
+  font-family: 'Roboto', sans-serif;
+  color: #ffffff;
+  padding: 10px 20px 10px 20px;
+  border-radius: 32px;
+  background: #54DEF9;
+  background: linear-gradient(to right, #12c2e9,#c471ed, #f64f59);
 }
 
 .items {
-  font-family: 'Roboto', sans-serif;
-  border-radius: 3px;
-  background-color: #ffffff;
-  color: black;
-  padding: 10px;
+  padding: 10px 20px 10px 20px;
+  background: #ffffff;
+  border-radius: 20px;
   cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }

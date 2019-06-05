@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import './App.css';
 import URL from './constants';
-import loading from './loading.gif'
+import loading from './loading.gif';
+import search from './search.png';
 
 class App extends Component {
 
@@ -40,10 +41,9 @@ class App extends Component {
     if (this.state.screen === 'search'){
       return(
         <div className="container" onKeyPress={this.handleEnter}>
-          <h1>StackOverflow Search</h1>
           <div className="container2">
-            <input className="field" onChange={e => this.setState({text: e.target.value.toLowerCase()})} />
-            <a href="#" className="search" onClick={this.onSearch} >SEARCH</a>
+            <input className="field" placeholder="What are you looking for?" onChange={e => this.setState({text: e.target.value.toLowerCase()})} />
+            <img src={search} className="icon" onClick={this.onSearch} />
           </div>
         </div>
       );
@@ -60,13 +60,14 @@ class App extends Component {
     else if (this.state.screen === 'results' && this.state.results.length === 0){
       return(
         <div className="container">
-          <h1>
-            No Results found
+          <h1 className="error">
+            404
           </h1>
-          <div style={{display: "flex", alignItems: "center" }}>
+          <h2>Oops! No results were found for "{this.state.text}"</h2>
+          <div className="link">
             <p>click</p>
             <a href="#" style={{marginLeft: "5px", marginRight: "5px"}} onClick={this.goBack}>here</a>            
-            <p>to go back to search</p>
+            <p>to search again</p>
           </div>
         </div>
       );
@@ -74,18 +75,20 @@ class App extends Component {
     else if (this.state.screen === 'results') {
       return(
         <div className="container3">
-          <h1>Top results:</h1>
+          <h1 className="resultHeading">
+            "{this.state.text}"
+          </h1>
           <div>
             {
               this.state.results.map((item, index) => {
-                return <h2 className="items" key={index}>{item}</h2>
+                return <h3 className="items" key={index}>{item}</h3>
               })
             }
           </div>
-          <div style={{display: "flex", alignItems: "center" }}>
+          <div className="link">
             <p>click</p>
             <a href="#" style={{marginLeft: "5px", marginRight: "5px"}} onClick={this.goBack}>here</a>            
-            <p>to go back to search</p>
+            <p>to search again</p>
           </div>
         </div>
       );
