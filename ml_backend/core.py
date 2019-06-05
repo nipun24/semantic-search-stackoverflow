@@ -23,6 +23,7 @@ def get_tags(input):
 #Requesting the StackExchange API for questions using the tags obatained
 def get_questions(tags):
     temp = []
+    messages = []
     for i in range(1, len(tags)+1):
         comb = []
         comb.append(list(combinations(tags, i)))

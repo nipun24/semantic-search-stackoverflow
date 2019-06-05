@@ -49,8 +49,13 @@
 }
 
 .link {
-  display: flex;
-  align-items: center;
+  text-decoration: none;
+  background: #54DEF9;
+  background: linear-gradient(to right, #12c2e9,#c471ed, #f64f59);
+  color: #ffffff;
+  font-weight: bold;
+  padding: 10px 15px 10px 15px;
+  border-radius: 20px;
 }
 
 .container3 {

@@ -64,11 +64,7 @@ class App extends Component {
             404
           </h1>
           <h2>Oops! No results were found for "{this.state.text}"</h2>
-          <div className="link">
-            <p>click</p>
-            <a href="#" style={{marginLeft: "5px", marginRight: "5px"}} onClick={this.goBack}>here</a>            
-            <p>to search again</p>
-          </div>
+          <a href="#" className="link" onClick={this.goBack}>GO TO SEARCH</a>
         </div>
       );
     }
@@ -85,11 +81,7 @@ class App extends Component {
               })
             }
           </div>
-          <div className="link">
-            <p>click</p>
-            <a href="#" style={{marginLeft: "5px", marginRight: "5px"}} onClick={this.goBack}>here</a>            
-            <p>to search again</p>
-          </div>
+          <a href="#" className="link" onClick={this.goBack}>GO TO SEARCH</a>
         </div>
       );
     }
