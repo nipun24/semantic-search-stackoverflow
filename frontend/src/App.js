@@ -9,36 +9,20 @@ import info from './assets/info.png';
 class App extends Component {
 
   state = {
-    text: "",
+    text: "how to define function in python",
     screen: 'search',
     results: []
   }
 
   onSearch = () => {
     this.setState({screen: 'loading'})    
-    // fetch(`${URL}/`, {
-    //   method: 'post',
-    //   headers: {'Content-Type': 'application/json'},
-    //   body: JSON.stringify({
-    //     query: this.state.text
-    //   })
-    // })
-    // .then(res => res.json())
-    // .then(json => {
-    //   if(json){
-    //     json[0].map((item, index) => {
-    //       json[1][index].probability = item.probability
-    //     })
-    //     json[1].sort((a ,b) => {
-    //       return b.probability - a.probability
-    //     })
-    //     this.setState({screen: 'results', results: json[1]})
-    //   }
-    //   else {
-    //     this.setState({screen: 'results'})
-    //   }
-    // })
-    fetch("https://raw.githubusercontent.com/nipun24/json-repo/master/result.json")
+    fetch(`${URL}/`, {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        query: this.state.text
+      })
+    })
     .then(res => res.json())
     .then(json => {
       if(json){
@@ -54,6 +38,24 @@ class App extends Component {
         this.setState({screen: 'results'})
       }
     })
+
+    //for testing purpose
+    // fetch("https://raw.githubusercontent.com/nipun24/json-repo/master/result.json")
+    // .then(res => res.json())
+    // .then(json => {
+    //   if(json){
+    //     json[0].map((item, index) => {
+    //       json[1][index].probability = item.probability
+    //     })
+    //     json[1].sort((a ,b) => {
+    //       return b.probability - a.probability
+    //     })
+    //     this.setState({screen: 'results', results: json[1]})
+    //   }
+    //   else {
+    //     this.setState({screen: 'results'})
+    //   }
+    // })
   }
 
   handleEnter = (e) => {
@@ -107,13 +109,21 @@ class App extends Component {
             {
               this.state.results.map((item, index) => {
                 return(
-                  <div className="items">
-                    <h3 style={{margin: 0}} key={index}>
-                      {item.title}
-                    </h3>
-                    <div>
-                      <img className="link" src={link} onClick={()=> window.open(item.link, "_blank")}/>
-                      <img className="link" src={info} />
+                  <div>
+                    <div className="items">
+                      <h3 style={{margin: 0}} key={index}>
+                        {item.title}
+                      </h3>
+                      <div style={{display: "flex", flexDirection: "row"}}>
+                        <div className="linkProb">{Math.ceil(item.probability*100)}%</div>
+                        <img className="link" src={info} />
+                        <img className="link" src={link} onClick={()=> window.open(item.link, "_blank")}/>
+                      </div>
+                    </div>
+                    <div 
+                      className="similar" 
+                      style={{background: `linear-gradient(to right, #ff9800 ${item.probability*100}%, #ffffff`}}
+                    >
                     </div>
                   </div>
                 );
