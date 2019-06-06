@@ -28,11 +28,15 @@ def get_questions(tags):
     temp = []
     messages = []
     data = []
+    #Creating a list of all the possible combinations of tags
     for i in range(1, len(tags)+1):
         comb = []
         comb.append(list(combinations(tags, i)))
         for j in range(0, len(comb[0])):
             temp.append(list(comb[0][j]))
+    #Making API calls to all the possible URLs
+    messages = []
+    desc = []
     for i in range(len(temp)-1, -1, -1):
         url = ''
         for j in temp[i]:
@@ -40,30 +44,28 @@ def get_questions(tags):
         URL = f'https://api.stackexchange.com/2.2/questions?order=asc&sort=activity&tagged={url}&site=stackoverflow'
         r = requests.get(url = URL)
         data = r.json()
-        messages = []
         for item in data['items']:
-            messages.append(item['title'])
-        if len(messages) != 0:
-            break
-    return [messages,data]
+          desc.append(item)
+          messages.append(item['title'])
+    return [messages,desc]
 
 #Converting sentences to embeddings and computing the inner product to calculate similarity
-def get_similarity(messages):
+def get_similarity(questions):
     # Downloading the pre-trained "Universal Sentence Encoder" from tensorflow hub
-    module_url = "https://tfhub.dev/google/universal-sentence-encoder/2" 
-    embed = hub.Module(module_url)
-    similarity_input_placeholder = tf.placeholder(tf.string, shape=(None))
-    similarity_message_encodings = embed(similarity_input_placeholder)
+    url = "https://tfhub.dev/google/universal-sentence-encoder/2" 
+    embed = hub.Module(url)
+    placeholder = tf.placeholder(tf.string, shape=(None))
+    question_encodings = embed(placeholder)
     with tf.Session() as session:
         session.run(tf.global_variables_initializer())
         session.run(tf.tables_initializer())
-        message_embeddings = session.run(similarity_message_encodings, feed_dict={similarity_input_placeholder: messages})
-        per = np.inner(message_embeddings, message_embeddings[-1:])
+        embeddings = session.run(question_encodings, feed_dict={placeholder: questions})
+        similarity = np.inner(embeddings, embeddings[-1:])
 
     # Adding probability values to the questions
     dictItems = []
     i = 0
-    for i in range(0, len(per)-1 ):
-        temp = { "probability" : per.item(i), "title" : messages[i] }
+    for i in range(0, len(similarity)-1 ):
+        temp = { "probability" : similarity.item(i), "title" : questions[i] }
         dictItems.append(temp)
     return dictItems

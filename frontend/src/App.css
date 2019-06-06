@@ -75,6 +75,7 @@
 
 .items {
   display: flex;
+  max-width: 75vw;
   justify-content: space-between;
   padding: 10px 20px 10px 20px;
   background: #ffffff;
@@ -110,6 +111,33 @@
   padding: 2px;
   font-size: 10px;
   border-radius: 30px;
-  background-color: #f64f59;
+  background-color: #ff9800;
   color: white;
+  cursor: pointer;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  font-size: 12px;
+  width: 60px;
+  background-color: white;
+  color: black;
+  text-align: center;
+  border-radius: 3px;
+  padding: 0;
+  margin: 0 0 0 -30px;
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  border: 1px solid black;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

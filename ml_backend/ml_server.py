@@ -7,18 +7,18 @@ CORS(app)
 
 @app.route("/",methods=['POST'])
 def hello():
-    similar = []
-    input = request.json['query']
-    tags = core.get_tags(input)
+    similarity = []
+    query = request.json['query']
+    tags = core.get_tags(query)
     x = core.get_questions(tags)
-    messages = x[0]
+    questions = x[0]
     data = x[1]
-    if len(messages) == 0:
+    if len(questions) == 0:
         return jsonify(False)
     else:
-        messages.append(input)
-        similar = core.get_similarity(messages)
-        return jsonify(similar, data['items'])
+        questions.append(query)
+        similarity = core.get_similarity(questions)
+        return jsonify(similarity, data)
     
 if __name__ == '__main__':
     app.run(debug=True)

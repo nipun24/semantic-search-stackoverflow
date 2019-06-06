@@ -9,38 +9,20 @@ import info from './assets/info.png';
 class App extends Component {
 
   state = {
-    text: "how to define function in python",
+    text: "",
     screen: 'search',
     results: []
   }
 
   onSearch = () => {
-    this.setState({screen: 'loading'})    
-    fetch(`${URL}/`, {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        query: this.state.text
-      })
-    })
-    .then(res => res.json())
-    .then(json => {
-      if(json){
-        json[0].map((item, index) => {
-          json[1][index].probability = item.probability
-        })
-        json[1].sort((a ,b) => {
-          return b.probability - a.probability
-        })
-        this.setState({screen: 'results', results: json[1]})
-      }
-      else {
-        this.setState({screen: 'results'})
-      }
-    })
-
-    //for testing purpose
-    // fetch("https://raw.githubusercontent.com/nipun24/json-repo/master/result.json")
+    // this.setState({screen: 'loading'})    
+    // fetch(`${URL}/`, {
+    //   method: 'post',
+    //   headers: {'Content-Type': 'application/json'},
+    //   body: JSON.stringify({
+    //     query: this.state.text
+    //   })
+    // })
     // .then(res => res.json())
     // .then(json => {
     //   if(json){
@@ -56,6 +38,25 @@ class App extends Component {
     //     this.setState({screen: 'results'})
     //   }
     // })
+
+    //for testing purpose
+
+    fetch("https://raw.githubusercontent.com/nipun24/json-repo/master/result.json")
+    .then(res => res.json())
+    .then(json => {
+      if(json){
+        json[0].map((item, index) => {
+          json[1][index].probability = item.probability
+        })
+        json[1].sort((a ,b) => {
+          return b.probability - a.probability
+        })
+        this.setState({screen: 'results', results: json[1]})
+      }
+      else {
+        this.setState({screen: 'results'})
+      }
+    })
   }
 
   handleEnter = (e) => {
@@ -65,7 +66,7 @@ class App extends Component {
   }
 
   goBack = () => {
-    this.setState({screen: 'search'})
+    this.setState({screen: 'search', results: []})
   }
 
   render() {
@@ -115,14 +116,23 @@ class App extends Component {
                         {item.title}
                       </h3>
                       <div style={{display: "flex", flexDirection: "row"}}>
-                        <div className="linkProb">{Math.ceil(item.probability*100)}%</div>
-                        <img className="link" src={info} />
-                        <img className="link" src={link} onClick={()=> window.open(item.link, "_blank")}/>
+                        <div className="tooltip">
+                          <div className="linkProb">{Math.ceil(item.probability*100)}%</div>
+                          <div className="tooltiptext">Similarity</div>
+                        </div>
+                        <div className="tooltip">
+                          <img className="link" src={info} />
+                          <div className="tooltiptext">More info</div>
+                        </div>
+                        <div className="tooltip">
+                          <img className="link" src={link} onClick={()=> window.open(item.link, "_blank")}/>
+                          <div className="tooltiptext">Go to link</div>
+                        </div>
                       </div>
                     </div>
                     <div 
                       className="similar" 
-                      style={{background: `linear-gradient(to right, #ff9800 ${item.probability*100}%, #ffffff`}}
+                      style={{background: `linear-gradient(to right, #ff9800 ${item.probability*100}%, #ffffff 1%`}}
                     >
                     </div>
                   </div>
