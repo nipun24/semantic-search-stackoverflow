@@ -9,3 +9,11 @@
 2. node 8.12+
 3. active internet connection
 4. jupyter notebook (optional) 
+### Package Requirements:
+1. tensorflow
+2. tensorflow_hub
+3. numpy
+4. nltk
+5. requests
+6. flask
+7. flask_cors
