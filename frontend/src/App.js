@@ -51,7 +51,7 @@ class App extends Component {
         json[1].sort((a ,b) => {
           return b.probability - a.probability
         })
-        this.setState({screen: 'results', results: json[1]})
+        this.setState({screen: 'results', results: json[1], text: "numpy array in python"})
       }
       else {
         this.setState({screen: 'results'})
@@ -67,6 +67,12 @@ class App extends Component {
 
   goBack = () => {
     this.setState({screen: 'search', results: []})
+  }
+
+  dateFormat = (d) => {
+    var date = new Date(d)
+    var options = {year: 'numeric', month: 'long', day: 'numeric'}
+    return date.toLocaleDateString("en-US", options)
   }
 
   render() {
@@ -122,7 +128,19 @@ class App extends Component {
                         </div>
                         <div className="tooltip">
                           <img className="link" src={info} />
-                          <div className="tooltiptext">More info</div>
+                          <div className="tooltiptext2">
+                            <div style={{display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
+                              {item.tags.map(tag => {
+                                return(<div className="tags">{tag}</div>)
+                              })}
+                            </div>
+                            <p>Answered: {item.is_answered ? "Yes" : "No"}</p>
+                            <p>Number of answers: {item.answer_count ? item.answer_count : "-"}</p>
+                            <p>Views: {item.view_count}</p>
+                            <p>Accept Rate: {item.owner.accept_rate ? item.owner.accept_rate : "-"}</p>
+                            <p>Posted on: {this.dateFormat(item.creation_date)}</p>
+                            <p>Last Activity: {this.dateFormat(item.last_activity_date)}</p>
+                          </div>
                         </div>
                         <div className="tooltip">
                           <img className="link" src={link} onClick={()=> window.open(item.link, "_blank")}/>
