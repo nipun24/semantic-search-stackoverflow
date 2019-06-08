@@ -5,8 +5,8 @@ import nltk
 import requests
 from itertools import combinations
 
-#Cleaning the input to get tags
-def get_tags(input):
+#Cleaning the input to get tags (less performance more accuracy)
+def get_tags_slow(input):
     #Downloading the required libraries for nltk
     nltk.download('punkt')
     nltk.download('stopwords')
@@ -45,6 +45,27 @@ def get_tags(input):
       return final_tags[:5]
     else:
       return final_tags
+
+#Cleaning the input to get tags (more performance less accuracy)
+def get_tags(input):
+    #Downloading the required libraries for nltk
+    nltk.download('punkt')
+    nltk.download('stopwords')
+    from nltk.tokenize import RegexpTokenizer
+    from nltk.corpus import stopwords
+    
+    #extracting tags from the query
+    tokenized_word=RegexpTokenizer(r'\w+').tokenize(input)
+    stop_words=set(stopwords.words("english"))
+    filtered_sent=[]
+    for w in tokenized_word:
+        if w not in stop_words:
+            filtered_sent.append(w)
+    tags = list(set(filtered_sent))       
+    if len(tags) > 5:
+      return tags[:5]
+    else:
+      return tags
 
 #Requesting the StackExchange API for questions using the tags obatained
 def get_questions(tags):

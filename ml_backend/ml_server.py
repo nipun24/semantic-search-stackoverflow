@@ -5,8 +5,27 @@ import core
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/",methods=['POST'])
+@app.route("/", methods=["GET"])
 def hello():
+    return "working"
+
+@app.route("/slow",methods=['POST'])
+def process():
+    similarity = []
+    query = request.json['query']
+    tags = core.get_tags_slow(query)
+    x = core.get_questions(tags)
+    questions = x[0]
+    data = x[1]
+    if len(questions) == 0:
+        return jsonify(False)
+    else:
+        questions.append(query)
+        similarity = core.get_similarity(questions)
+        return jsonify(similarity, data)
+
+@app.route("/fast", methods=['POST'])
+def process_fast():
     similarity = []
     query = request.json['query']
     tags = core.get_tags(query)
@@ -21,4 +40,4 @@ def hello():
         return jsonify(similarity, data)
     
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)
