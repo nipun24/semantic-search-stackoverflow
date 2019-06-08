@@ -15,33 +15,16 @@ class App extends Component {
   }
 
   onSearch = () => {
-    // this.setState({screen: 'loading'})    
-    // fetch(`${URL}/`, {
-    //   method: 'post',
-    //   headers: {'Content-Type': 'application/json'},
-    //   body: JSON.stringify({
-    //     query: this.state.text
-    //   })
-    // })
-    // .then(res => res.json())
-    // .then(json => {
-    //   if(json){
-    //     json[0].map((item, index) => {
-    //       json[1][index].probability = item.probability
-    //     })
-    //     json[1].sort((a ,b) => {
-    //       return b.probability - a.probability
-    //     })
-    //     this.setState({screen: 'results', results: json[1]})
-    //   }
-    //   else {
-    //     this.setState({screen: 'results'})
-    //   }
-    // })
-
-    //for testing purpose
-
-    fetch("https://raw.githubusercontent.com/nipun24/json-repo/master/result.json")
+    this.setState({screen: 'loading'})
+    
+    //for final build 
+    fetch(`${URL}/`, {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        query: this.state.text
+      })
+    })
     .then(res => res.json())
     .then(json => {
       if(json){
@@ -51,12 +34,31 @@ class App extends Component {
         json[1].sort((a ,b) => {
           return b.probability - a.probability
         })
-        this.setState({screen: 'results', results: json[1], text: "numpy array in python"})
+        this.setState({screen: 'results', results: json[1]})
       }
       else {
         this.setState({screen: 'results'})
       }
     })
+
+    //for testing purpose
+
+    // fetch("https://raw.githubusercontent.com/nipun24/json-repo/master/result.json")
+    // .then(res => res.json())
+    // .then(json => {
+    //   if(json){
+    //     json[0].map((item, index) => {
+    //       json[1][index].probability = item.probability
+    //     })
+    //     json[1].sort((a ,b) => {
+    //       return b.probability - a.probability
+    //     })
+    //     this.setState({screen: 'results', results: json[1], text: "numpy array in python"})
+    //   }
+    //   else {
+    //     this.setState({screen: 'results'})
+    //   }
+    // })
   }
 
   handleEnter = (e) => {
@@ -70,7 +72,7 @@ class App extends Component {
   }
 
   dateFormat = (d) => {
-    var date = new Date(d)
+    var date = new Date(d*1000)
     var options = {year: 'numeric', month: 'long', day: 'numeric'}
     return date.toLocaleDateString("en-US", options)
   }

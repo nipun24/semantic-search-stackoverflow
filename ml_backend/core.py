@@ -10,18 +10,41 @@ def get_tags(input):
     #Downloading the required libraries for nltk
     nltk.download('punkt')
     nltk.download('stopwords')
-    from nltk.tokenize import word_tokenize
+    from nltk.tokenize import RegexpTokenizer
     from nltk.corpus import stopwords
-    tokenized_word=word_tokenize(input)
+    
+    #extracting tags from the query
+    tokenized_word=RegexpTokenizer(r'\w+').tokenize(input)
     stop_words=set(stopwords.words("english"))
     filtered_sent=[]
     for w in tokenized_word:
         if w not in stop_words:
             filtered_sent.append(w)
-    if len(filtered_sent) > 5:
-      return filtered_sent[:5]
+    tags = list(set(filtered_sent))
+    
+    #searching the API for tags using the obtained tags
+    api_tags = []
+    for tag in tags:
+      URL = f'https://api.stackexchange.com/2.2/tags?order=desc&sort=popular&inname={tag}&site=stackoverflow'
+      r = requests.get(url = URL)
+      data = r.json()
+      if len(data['items']) > 0:
+        api_tags.append(data['items'][0]['name'])
+
+    #finding similarity between the query tag and the API tag
+    final_tags = []
+    for i in range(0,len(tags)):
+      arr = []
+      arr.append(tags[i])
+      arr.append(api_tags[i])
+      sim = get_similarity(arr) 
+      if sim[0]['probability'] > .7:
+        final_tags.append(api_tags[i])
+       
+    if len(final_tags) > 5:
+      return final_tags[:5]
     else:
-      return filtered_sent
+      return final_tags
 
 #Requesting the StackExchange API for questions using the tags obatained
 def get_questions(tags):
@@ -52,7 +75,7 @@ def get_questions(tags):
 #Converting sentences to embeddings and computing the inner product to calculate similarity
 def get_similarity(questions):
     # Downloading the pre-trained "Universal Sentence Encoder" from tensorflow hub
-    url = "https://tfhub.dev/google/universal-sentence-encoder/2" 
+    url = "https://tfhub.dev/google/universal-sentence-encoder-large/3" 
     embed = hub.Module(url)
     placeholder = tf.placeholder(tf.string, shape=(None))
     question_encodings = embed(placeholder)
