@@ -5,13 +5,16 @@ import loading from './assets/loading.gif';
 import search from './assets/search.png';
 import link from './assets/link.png';
 import info from './assets/info.png';
+import sort from './assets/sort.png';
 
 class App extends Component {
 
   state = {
     text: "",
     screen: 'search',
-    results: []
+    results: [],
+    inputValue: "",
+    order: false,
   }
 
   onSearch = () => {
@@ -22,19 +25,21 @@ class App extends Component {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        query: this.state.text
+        query: this.state.text.toLowerCase()
       })
     })
     .then(res => res.json())
     .then(json => {
       if(json){
-        json[0].map((item, index) => {
-          json[1][index].probability = item.probability
+        var arr = []
+        arr = json.sort((a, b) => {
+          return b.probability-a.probability
         })
-        json[1].sort((a ,b) => {
-          return b.probability - a.probability
-        })
-        this.setState({screen: 'results', results: json[1]})
+        this.setState({
+          screen: 'results', 
+          results: arr, 
+          text: "numpy array in python", 
+          inputValue: "numpy array in python"})
       }
       else {
         this.setState({screen: 'results'})
@@ -43,17 +48,19 @@ class App extends Component {
 
     //for testing purpose
 
-    // fetch("https://raw.githubusercontent.com/nipun24/json-repo/master/result.json")
+    // fetch("https://raw.githubusercontent.com/nipun24/rest-api-json-repo/master/result.json")
     // .then(res => res.json())
     // .then(json => {
     //   if(json){
-    //     json[0].map((item, index) => {
-    //       json[1][index].probability = item.probability
+    //     var arr = []
+    //     arr = json.sort((a, b) => {
+    //       return b.probability-a.probability
     //     })
-    //     json[1].sort((a ,b) => {
-    //       return b.probability - a.probability
-    //     })
-    //     this.setState({screen: 'results', results: json[1], text: "numpy array in python"})
+    //     this.setState({
+    //       screen: 'results', 
+    //       results: arr, 
+    //       text: "numpy array in python", 
+    //       inputValue: "numpy array in python"})
     //   }
     //   else {
     //     this.setState({screen: 'results'})
@@ -77,7 +84,23 @@ class App extends Component {
     return date.toLocaleDateString("en-US", options)
   }
 
-  render() {
+  onSort = (order) => {
+    var arr = []
+    order = this.state.order
+    if(order){
+      arr = this.state.results.sort((a, b) => {
+        return b.probability-a.probability
+      })
+    }
+    else {
+      arr = this.state.results.sort((a, b) => {
+        return a.probability-b.probability
+      })
+    }
+    this.setState({results: arr, order: !order})
+  }
+
+  render() {    
     if (this.state.screen === 'search'){
       return(
         <div className="container" onKeyPress={this.handleEnter}>
@@ -111,16 +134,24 @@ class App extends Component {
     else if (this.state.screen === 'results') {
       return(
         <div className="container3">
-          <h1 className="resultHeading">
-            "{this.state.text}"
-          </h1>
+          <div>
+            <input 
+              className="field2" 
+              onChange={e => this.setState({text: e.target.value.toLowerCase()})}
+              placeholder={this.state.inputValue}
+            />
+            <div className="icon2">
+              <img src={sort} style={{width: "32px", marginRight:"10px"}} onClick={this.onSort}/>
+              <img src={search} onClick={this.onSearch} />
+            </div>
+          </div>
           <div>
             {
               this.state.results.map((item, index) => {
                 return(
-                  <div>
+                  <div key={index}>
                     <div className="items">
-                      <h3 style={{margin: 0}} key={index}>
+                      <h3 style={{margin: 0}}>
                         {item.title}
                       </h3>
                       <div style={{display: "flex", flexDirection: "row"}}>
@@ -152,7 +183,7 @@ class App extends Component {
                     </div>
                     <div 
                       className="similar" 
-                      style={{background: `linear-gradient(to right, #ff9800 ${item.probability*100}%, #ffffff 1%`}}
+                      style={{background: `linear-gradient(to right, #ff9800 ${item.probability*100}%, #ffffff 0%`}}
                     >
                     </div>
                   </div>
@@ -160,7 +191,6 @@ class App extends Component {
               })
             }
           </div>
-          <a href="#" className="goto" onClick={this.goBack}>GO TO SEARCH</a>
         </div>
       );
     }

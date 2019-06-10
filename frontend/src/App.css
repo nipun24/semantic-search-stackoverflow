@@ -172,3 +172,29 @@
   border-radius: 3px;
   padding: 3px;
 }
+
+.field2 {
+  font-size: 18px;
+  padding-left: 40px; 
+  outline: none;
+  border: 1px solid;
+  height: 70px;
+  width: 75vw;
+  border-radius: 70px;
+  color: #ffffff;
+  background: #54DEF9;
+  background: linear-gradient(to right, #12c2e9,#c471ed, #f64f59);
+  margin: 5px;
+}
+
+.field2::placeholder {
+  color: #ffffff;
+}
+
+.icon2 {
+  position:absolute;
+  margin-right: 12vw;
+  top:25px;
+  right:0px;
+  cursor: pointer;
+}

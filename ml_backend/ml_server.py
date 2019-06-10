@@ -20,9 +20,10 @@ def process():
     if len(questions) == 0:
         return jsonify(False)
     else:
-        questions.append(query)
-        similarity = core.get_similarity(questions)
-        return jsonify(similarity, data)
+        similarity = core.get_similarity(questions, query)
+        for i in range(len(data)):
+            data[i].update({'probability': similarity[i]['probability']})
+        return jsonify(data)
 
 @app.route("/fast", methods=['POST'])
 def process_fast():
@@ -35,9 +36,10 @@ def process_fast():
     if len(questions) == 0:
         return jsonify(False)
     else:
-        questions.append(query)
-        similarity = core.get_similarity(questions)
-        return jsonify(similarity, data)
+        similarity = core.get_similarity(questions, query)
+        for i in range(len(data)):
+            data[i].update({'probability': similarity[i]['probability']})
+        return jsonify(data)
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)
