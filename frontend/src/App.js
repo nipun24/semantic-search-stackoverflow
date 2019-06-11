@@ -37,9 +37,8 @@ class App extends Component {
         })
         this.setState({
           screen: 'results', 
-          results: arr, 
-          text: "numpy array in python", 
-          inputValue: "numpy array in python"})
+          results: arr,  
+          inputValue: this.state.text})
       }
       else {
         this.setState({screen: 'results'})

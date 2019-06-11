@@ -34,10 +34,7 @@ def get_tags_slow(query):
   #finding similarity between the query tag and the API tag
   final_tags = []
   for i in range(0,len(tags)):
-    arr = []
-    arr.append(tags[i])
-    arr.append(api_tags[i])
-    sim = get_similarity(arr) 
+    sim = get_similarity([tags[i]], api_tags[i]) 
     if sim[0]['probability'] > .7:
       final_tags.append(api_tags[i])
       
@@ -96,16 +93,16 @@ def get_questions(tags):
 #Converting sentences to embeddings and computing the inner product to calculate similarity
 def get_similarity(questions, query):
   questions.append(query)
-  # Downloading the pre-trained "Universal Sentence Encoder" from tensorflow hub
-  url = "https://tfhub.dev/google/universal-sentence-encoder-large/3" 
-  embed = hub.Module(url)
-  placeholder = tf.placeholder(tf.string, shape=(None))
-  question_encodings = embed(placeholder)
-  with tf.Session() as session:
-      session.run(tf.global_variables_initializer())
-      session.run(tf.tables_initializer())
-      embeddings = session.run(question_encodings, feed_dict={placeholder: questions})
-      similarity = np.inner(embeddings, embeddings[-1:])
+  with tf.Graph().as_default():
+    # Downloading the pre-trained "Universal Sentence Encoder" from tensorflow hub
+    url = "https://tfhub.dev/google/universal-sentence-encoder/2" 
+    embed = hub.Module(url)
+    question_encodings = embed(questions)
+    with tf.Session() as session:
+        session.run(tf.global_variables_initializer())
+        session.run(tf.tables_initializer())
+        embeddings = session.run(question_encodings)
+        similarity = np.inner(embeddings, embeddings[-1:])
 
   # Adding probability values to the questions
   dictItems = []
