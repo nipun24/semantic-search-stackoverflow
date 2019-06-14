@@ -5,8 +5,8 @@ import nltk
 import requests
 from itertools import combinations
 
-#Cleaning the input to get tags (less performance more accuracy)
-def get_tags_slow(query):
+#Cleaning the input to get tags
+def get_tags(query):
   #Downloading the required libraries for nltk
   nltk.download('punkt')
   nltk.download('stopwords')
@@ -31,38 +31,10 @@ def get_tags_slow(query):
     if len(data['items']) > 0:
       api_tags.append(data['items'][0]['name'])
 
-  #finding similarity between the query tag and the API tag
-  final_tags = []
-  for i in range(0,len(tags)):
-    sim = get_similarity([tags[i]], api_tags[i]) 
-    if sim[0]['probability'] > .7:
-      final_tags.append(api_tags[i])
-      
-  if len(final_tags) > 5:
-    return final_tags[:5]
+  if len(api_tags) > 5:
+    return api_tags[:5]
   else:
-    return final_tags
-
-#Cleaning the input to get tags (more performance less accuracy)
-def get_tags(query):
-  #Downloading the required libraries for nltk
-  nltk.download('punkt')
-  nltk.download('stopwords')
-  from nltk.tokenize import RegexpTokenizer
-  from nltk.corpus import stopwords
-  
-  #extracting tags from the query
-  tokenized_word=RegexpTokenizer(r'\w+').tokenize(query)
-  stop_words=set(stopwords.words("english"))
-  filtered_sent=[]
-  for w in tokenized_word:
-      if w not in stop_words:
-          filtered_sent.append(w)
-  tags = list(set(filtered_sent))       
-  if len(tags) > 5:
-    return tags[:5]
-  else:
-    return tags
+    return api_tags
 
 #Requesting the StackExchange API for questions using the tags obatained
 def get_questions(tags):
@@ -95,7 +67,7 @@ def get_similarity(questions, query):
   questions.append(query)
   with tf.Graph().as_default():
     # Downloading the pre-trained "Universal Sentence Encoder" from tensorflow hub
-    url = "https://tfhub.dev/google/universal-sentence-encoder/2" 
+    url = "https://tfhub.dev/google/universal-sentence-encoder-large/3" 
     embed = hub.Module(url)
     question_encodings = embed(questions)
     with tf.Session() as session:

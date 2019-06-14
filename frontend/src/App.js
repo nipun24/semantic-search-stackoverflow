@@ -21,7 +21,7 @@ class App extends Component {
     this.setState({screen: 'loading'})
     
     //for final build 
-    fetch(`${URL}/fast`, {
+    fetch(URL, {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
