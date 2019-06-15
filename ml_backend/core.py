@@ -39,8 +39,6 @@ def get_tags(query):
 #Requesting the StackExchange API for questions using the tags obatained
 def get_questions(tags):
   temp = []
-  messages = []
-  data = []
   #Creating a list of all the possible combinations of tags
   for i in range(1, len(tags)+1):
       comb = []
@@ -48,7 +46,6 @@ def get_questions(tags):
       for j in range(0, len(comb[0])):
           temp.append(list(comb[0][j]))
   #Making API calls to all the possible URLs
-  messages = []
   desc = []
   for i in range(len(temp)-1, -1, -1):
       url = ''
@@ -59,8 +56,16 @@ def get_questions(tags):
       data = r.json()
       for item in data['items']:
         desc.append(item)
-        messages.append(item['title'])
-  return [messages,desc]
+        
+      #removing duplicate questions
+      filtered_data = []
+      questions = []
+      for i in desc:
+        if i not in filtered_data:
+          filtered_data.append(i)
+          questions.append(i['title'])
+      
+  return [questions,filtered_data]
 
 #Converting sentences to embeddings and computing the inner product to calculate similarity
 def get_similarity(questions, query):

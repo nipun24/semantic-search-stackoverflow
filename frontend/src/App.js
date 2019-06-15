@@ -44,27 +44,6 @@ class App extends Component {
         this.setState({screen: 'results'})
       }
     })
-
-    //for testing purpose
-
-    // fetch("https://raw.githubusercontent.com/nipun24/rest-api-json-repo/master/result.json")
-    // .then(res => res.json())
-    // .then(json => {
-    //   if(json){
-    //     var arr = []
-    //     arr = json.sort((a, b) => {
-    //       return b.probability-a.probability
-    //     })
-    //     this.setState({
-    //       screen: 'results', 
-    //       results: arr, 
-    //       text: "numpy array in python", 
-    //       inputValue: "numpy array in python"})
-    //   }
-    //   else {
-    //     this.setState({screen: 'results'})
-    //   }
-    // })
   }
 
   handleEnter = (e) => {
