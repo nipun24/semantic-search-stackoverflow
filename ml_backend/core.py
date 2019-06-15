@@ -28,7 +28,7 @@ def get_tags(query):
     URL = f'https://api.stackexchange.com/2.2/tags?order=desc&sort=popular&inname={tag}&site=stackoverflow'
     r = requests.get(url = URL)
     data = r.json()
-    if len(data['items']) > 0:
+    if len(data['items']) > 2:
       api_tags.append(data['items'][0]['name'])
 
   if len(api_tags) > 5:
@@ -47,6 +47,7 @@ def get_questions(tags):
           temp.append(list(comb[0][j]))
   #Making API calls to all the possible URLs
   desc = []
+  questions = []
   for i in range(len(temp)-1, -1, -1):
       url = ''
       for j in temp[i]:
@@ -54,18 +55,13 @@ def get_questions(tags):
       URL = f'https://api.stackexchange.com/2.2/questions?order=asc&sort=activity&tagged={url}&site=stackoverflow'
       r = requests.get(url = URL)
       data = r.json()
-      for item in data['items']:
-        desc.append(item)
-        
-      #removing duplicate questions
-      filtered_data = []
-      questions = []
-      for i in desc:
-        if i not in filtered_data:
-          filtered_data.append(i)
-          questions.append(i['title'])
-      
-  return [questions,filtered_data]
+      if len(data['items']) > 0 :
+        for item in data['items']:
+          desc.append(item)
+          questions.append(item['title'])
+        break
+    
+  return [questions,desc]
 
 #Converting sentences to embeddings and computing the inner product to calculate similarity
 def get_similarity(questions, query):

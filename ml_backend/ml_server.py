@@ -1,11 +1,15 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import core
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/", methods=['POST'])
+@app.route("/")
+def hello():
+    return render_template("index.html")
+
+@app.route("/compute", methods=['POST'])
 def compute():
     similarity = []
     query = request.json['query']
