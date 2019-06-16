@@ -14,7 +14,7 @@ def compute():
     similarity = []
     query = request.json['query']
     tags = core.get_tags(query)
-    x = core.get_questions(tags)
+    x = core.get_questions(tags, query)
     questions = x[0]
     data = x[1]
     if len(questions) == 0:

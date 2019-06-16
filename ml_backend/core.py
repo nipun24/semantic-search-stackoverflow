@@ -3,6 +3,7 @@ import tensorflow_hub as hub
 import numpy as np
 import nltk
 import requests
+import html
 from urllib.parse import quote
 from urllib.parse import unquote
 from itertools import combinations
@@ -36,28 +37,39 @@ def get_tags(query):
     return api_tags
 
 #Requesting the StackExchange API for questions using the tags obatained
-def get_questions(tags):
-  temp = []
-  #Creating a list of all the possible combinations of tags
-  for i in range(1, len(tags)+1):
-      comb = []
-      comb.append(list(combinations(tags, i)))
-      for j in range(0, len(comb[0])):
-          temp.append(list(comb[0][j]))
-  #Making API calls to all the possible URLs
+def get_questions(tags, query):
   desc = []
   questions = []
-  for i in range(len(temp)-1, -1, -1):
+  for tag in tags:
+    URL_search = f'https://api.stackexchange.com/2.2/search?order=desc&sort=activity&tagged={quote(tag)}&intitle={quote(query)}&site=stackoverflow'
+    r = requests.get(url = URL_search)
+    data = r.json()
+    if len(data['items']) != 0:
+      for item in data['items']:
+        desc.append(item)
+        questions.append(html.unescape(item['title']))
+      break
+
+  if len(questions) <= 5:
+    temp = []
+    #Creating a list of all the possible combinations of tags
+    for i in range(1, len(tags)+1):
+        comb = []
+        comb.append(list(combinations(tags, i)))
+        for j in range(0, len(comb[0])):
+            temp.append(list(comb[0][j]))
+    #Making API calls to all the possible URLs
+    for i in range(len(temp)-1, -1, -1):
       url = ''
       for j in temp[i]:
           url += j + ';'
-      URL = f'https://api.stackexchange.com/2.2/questions?order=asc&sort=activity&tagged={quote(url)}&site=stackoverflow'
-      r = requests.get(url = URL)
+      URL_tags = f'https://api.stackexchange.com/2.2/questions?order=asc&sort=activity&tagged={quote(url)}&site=stackoverflow'
+      r = requests.get(url = URL_tags)
       data = r.json()
       if len(data['items']) > 2 :
         for item in data['items']:
           desc.append(item)
-          questions.append(item['title'])
+          questions.append(html.unescape(item['title']))
         break
     
   return [questions,desc]
