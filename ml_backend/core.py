@@ -3,32 +3,31 @@ import tensorflow_hub as hub
 import numpy as np
 import nltk
 import requests
+from urllib.parse import quote
+from urllib.parse import unquote
 from itertools import combinations
 
 #Cleaning the input to get tags
 def get_tags(query):
   #Downloading the required libraries for nltk
-  nltk.download('punkt')
   nltk.download('stopwords')
-  from nltk.tokenize import RegexpTokenizer
   from nltk.corpus import stopwords
   
-  #extracting tags from the query
-  tokenized_word=RegexpTokenizer(r'\w+').tokenize(query)
-  stop_words=set(stopwords.words("english"))
-  filtered_sent=[]
-  for w in tokenized_word:
+  tokenized_sentence = query.split(' ')
+  stop_words = set(stopwords.words("english"))
+  crude_tags = []
+  for w in tokenized_sentence:
       if w not in stop_words:
-          filtered_sent.append(w)
-  tags = list(set(filtered_sent))
+          crude_tags.append(w)
+  tags = list(set(crude_tags))
   
   #searching the API for tags using the obtained tags
   api_tags = []
   for tag in tags:
-    URL = f'https://api.stackexchange.com/2.2/tags?order=desc&sort=popular&inname={tag}&site=stackoverflow'
+    URL = f'https://api.stackexchange.com/2.2/tags?order=desc&sort=popular&inname={quote(tag)}&site=stackoverflow'
     r = requests.get(url = URL)
     data = r.json()
-    if len(data['items']) > 2:
+    if len(data['items']) > 0:
       api_tags.append(data['items'][0]['name'])
 
   if len(api_tags) > 5:
@@ -51,11 +50,11 @@ def get_questions(tags):
   for i in range(len(temp)-1, -1, -1):
       url = ''
       for j in temp[i]:
-          url += j + '%3B'
-      URL = f'https://api.stackexchange.com/2.2/questions?order=asc&sort=activity&tagged={url}&site=stackoverflow'
+          url += j + ';'
+      URL = f'https://api.stackexchange.com/2.2/questions?order=asc&sort=activity&tagged={quote(url)}&site=stackoverflow'
       r = requests.get(url = URL)
       data = r.json()
-      if len(data['items']) > 0 :
+      if len(data['items']) > 2 :
         for item in data['items']:
           desc.append(item)
           questions.append(item['title'])
