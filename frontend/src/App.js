@@ -6,6 +6,7 @@ import search from './assets/search.png';
 import link from './assets/link.png';
 import info from './assets/info.png';
 import sort from './assets/sort.png';
+import { XmlEntities } from 'html-entities';
 
 class App extends Component {
 
@@ -130,7 +131,7 @@ class App extends Component {
                   <div key={index}>
                     <div className="items">
                       <h3 style={{margin: 0}}>
-                        {item.title}
+                        {XmlEntities.decode(item.title)}
                       </h3>
                       <div style={{display: "flex", flexDirection: "row"}}>
                         <div className="tooltip">
