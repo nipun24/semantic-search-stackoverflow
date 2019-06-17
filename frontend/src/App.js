@@ -113,7 +113,7 @@ class App extends Component {
     else if (this.state.screen === 'results') {
       return(
         <div className="container3">
-          <div>
+          <div onKeyPress={this.handleEnter}>
             <input 
               className="field2" 
               onChange={e => this.setState({text: e.target.value.toLowerCase()})}
