@@ -1,7 +1,7 @@
 
-# stackoverflow-search-optimization
-Solution for the IBM Hackathon problem : __Identification of User Query on Stack Overflow Using Semantic Search__
-### steps to run:
+# StackOverflow-Search-Optimization
+Solution for the IBMHackChallenge problem : __Identification of User Query on Stack Overflow Using Semantic Search__
+### Steps To Run:
 1. Run `python ml_server.py` inside `/ml_backend` folder
 2. Then visit `localhost:5000` and search for questions.
 
